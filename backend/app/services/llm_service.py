@@ -1,15 +1,19 @@
 from openai import OpenAI
-from backend.app.core.config import OPENAI_API_KEY
+from dotenv import load_dotenv
+import os
 
-client = OpenAI(api_key=OPENAI_API_KEY)
+load_dotenv()
+
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY")
+)
 
 
-def generate_response(prompt: str) -> str:
+def generate_response(messages):
+
     response = client.chat.completions.create(
         model="gpt-4.1-mini",
-        messages=[
-            {"role": "user", "content": prompt}
-        ]
+        messages=messages
     )
 
     return response.choices[0].message.content

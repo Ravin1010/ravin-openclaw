@@ -1,14 +1,22 @@
 from fastapi import APIRouter
-from backend.app.models.chat_models import ChatRequest, ChatResponse
-from backend.app.services.prompt_service import build_prompt
-from backend.app.services.llm_service import generate_response
+
+from backend.app.models.chat_models import (
+    ChatRequest,
+    ChatResponse
+)
+
+from backend.app.services.chat_service import process_chat
+
 
 router = APIRouter()
 
 
 @router.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    prompt = build_prompt(request.message)
-    response = generate_response(prompt)
 
-    return ChatResponse(response=response)
+    result = process_chat(
+        request.session_id,
+        request.message
+    )
+
+    return result
